@@ -1,0 +1,24 @@
+{
+  "name": "ghostPageProxy",
+  "version": "4.0.0",
+  "description": "ghostPageProxy",
+  "author": "roy <roymno2@163.com>",
+  "private": true,
+  "scripts": {
+    "start": "node ./node_modules/anyproxy/bin/anyproxy --port 8084 --rule ./rule_default.js",
+    "base": "node ./node_modules/anyproxy/bin/anyproxy --port 8084 --rule ./rule_base.js"
+  },
+  "dependencies": {
+    "anyproxy": "^4.0.10"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 14 versions",
+    "not ie <= 8"
+  ]
+}

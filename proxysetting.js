@@ -32,10 +32,6 @@ let controllerInfoDev = {
   defaultRewrite: {from: '/test', to: '/'},
   // defaultRewrite: null,
   // 用于修改请求路径
-  changeList: [],
-  // changeList: [
-  //   {svr: ["default"], p:['businessWall'], prefix: '^/ezsonar/apm/', rewrite: {from: '/ezsonar/apm/businessWall', to: '/ezsonar/apm/roy'}}
-  // ],
   proxyList: [
     {p: [
       'index',

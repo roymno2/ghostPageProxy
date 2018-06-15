@@ -1,1 +1,0 @@
-node ./node_modules/anyproxy/bin/anyproxy --port 8084 --rule ./rule_default.js

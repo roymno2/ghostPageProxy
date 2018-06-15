@@ -119,6 +119,7 @@ function readProxySetting () {
                 }
             }
             let passPre = {}
+            proxyData['changeList'] = []
             if (proxyData['changeList'] === undefined) {
                 proxyData['changeList'] = []
             }
