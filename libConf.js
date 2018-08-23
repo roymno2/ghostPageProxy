@@ -1,192 +1,141 @@
-// var libBase = require('./libBase')
 
-// 配置文件读取 ==============================================
-function rebuildRewriteCell (itemCell, defaultRewrite) {
-    // rewrite 是个对象
-    // 重构含有rewrite这个key的object行
-    // 可以整个用default，也可以局部引入default
-    if (itemCell['rewrite'] !== null && itemCell['rewrite'] !== undefined ) {
-        if (itemCell['rewrite']['default'] === true && defaultRewrite !== undefined && defaultRewrite !== null) {
-            // 如果未定义rewrite
-            itemCell['rewrite'] = defaultRewrite
-        }
-        let tmpConfWrite = itemCell['rewrite']
-        if (tmpConfWrite['useRe'] === false) {
-            itemCell['rewrite'] = {'from': tmpConfWrite['from'], 'to': tmpConfWrite['to']}
+var fs = require('fs')
+var gettype = Object.prototype.toString
+// 设计目标是读取和保存配置文件，并使配置封装在自己这边
+class confController {
+    //构造函数
+    constructor() {
+    }
+
+    rebuildCellDelay (delayCell) {
+        if (delayCell === 0 || delayCell === undefined || delayCell === null) {
+            return 0
         } else {
-            itemCell['rewrite'] = {'from': new RegExp(tmpConfWrite['from']), 'to': tmpConfWrite['to']}
+            return delayCell * 1000
         }
     }
-    if (itemCell['rewrite'] === undefined) {
-        itemCell['rewrite'] = null
-    }
-    return itemCell
-}
 
-function readProxySetting () {
-    // 读取代理配置
-    let finOut = {}
-    try {
-        var fs = require('fs')
-        let proxyDataJs = fs.readFileSync('./proxysetting.js', 'utf-8')
-        eval(proxyDataJs)
-        let proxyData = controllerInfo
-        let passHost = {}
-        proxyData['svrDict'] = {}
-        for (let km in proxyData['webSvr']) {
-            proxyData['svrDict'][km] = proxyData['webSvr'][km]
-        }
-        for (let km in proxyData['remoteSvr']) {
-            proxyData['svrDict'][km] = proxyData['remoteSvr'][km]
-        }
-        if (proxyData.hasOwnProperty('proxyList')) {
-            let orgList = proxyData['proxyList']
-            for (let i = 0; i < orgList.length; i++) {
-                if (orgList[i]['rePath'] === undefined) {
-                    orgList[i]['rePath'] = true
-                }
-                if (orgList[i]['statusCode'] === null || orgList[i]['statusCode'] === undefined || orgList[i]['statusCode'] === '') {
-                    orgList[i]['statusCode'] = 0  
+    rebuildCellRewrite (tmpConfWrite) {
+        // repObject {"from": "", "to": "", "useRegex": true}
+        if (tmpConfWrite === undefined || tmpConfWrite === null) {
+            // 如果没写/undefined/null的话，
+            return null
+        } else {
+            if (tmpConfWrite['from'] === '' && tmpConfWrite['to'] === '') {
+                return null
+            } else {
+                // 如果useRe是false的话,则不做正则处理，不写默认为true
+                if (tmpConfWrite['useRe'] === false) {
+                    return {'from': tmpConfWrite['from'], 'to': tmpConfWrite['to'], 'useRe': false }
                 } else {
-                    orgList[i]['statusCode'] = parseInt(orgList[i]['statusCode'])
-                }
-                // 替换delay
-                if (orgList[i]['delay'] === 0 || orgList[i]['delay'] === undefined || orgList[i]['delay'] === null) {
-                    orgList[i]['delay'] = 0
-                }
-                // 替换svr
-                for (let m = 0; m < orgList[i].svr.length; m++) {
-                    if (orgList[i]['svr'][m] === 'default') {
-                        orgList[i]['svr'][m] = proxyData['defaultRemote']
-                    }
-                    if (proxyData['svrDict'][orgList[i]['svr'][m]] !== undefined) {
-                        orgList[i]['svr'][m] = proxyData['svrDict'][orgList[i]['svr'][m]]
-                    } else {
-                        var e = new Error();
-                        e.message = "svrDict not exist";
-                        throw e;
-                    }
-                }
-                // 替换rewrite
-                if (orgList[i]['rep'] === undefined) {
-                    orgList[i]['rep'] = null
-                }
-                if (orgList[i]['rep'] !== null) {
-                    rebuildRewriteCell(orgList[i]['rep'], proxyData['defaultRewrite'])
-                    // 替换web
-                    if (orgList[i]['rep']['web'] === 'default') {
-                        orgList[i]['rep']['web'] = proxyData['defaultLocal']
-                    }
-                    if (proxyData['svrDict'][orgList[i]['rep']['web']] !== undefined) {
-                        orgList[i]['rep']['web'] = proxyData['svrDict'][orgList[i]['rep']['web']]
-                    } else {
-                        var e = new Error();
-                        e.message = "svrDict not exist";
-                        throw e;
-                    }
+                    return {'from': new RegExp(tmpConfWrite['from']), 'to': tmpConfWrite['to'], 'useRe': true }
                 }
             }
-            let tmpMidList = []
-            for (let i = 0; i < orgList.length; i++) {
-                for (let m = 0; m < orgList[i]['p'].length; m++) {
-                    // 替换p
-                    let newCell = Object.assign({}, orgList[i])
-                    // 很暴力的替换了
-                    orgList[i]['p'][m] = orgList[i]['p'][m].replace(/\{param\}/, '[^/]+')
-                    if (orgList[i]['addEnd'] === true) {
-                        orgList[i]['p'][m] = orgList[i]['p'][m] + '$'
-                    }
-                    if (orgList[i]['prefix'] !== undefined && orgList[i]['prefix'] !== '' && orgList[i]['prefix'] !== null) {
-                        orgList[i]['p'][m] = orgList[i]['prefix'] + orgList[i]['p'][m]
-                    }
-                    if (orgList[i]['rePath'] === true) {
-                        newCell['p'] = new RegExp(orgList[i]['p'][m])
-                    } else {
-                        newCell['p'] = orgList[i]['p'][m]
-                    }
-                    tmpMidList.push(newCell)
-                }
-            }
-            orgList = tmpMidList
-            // 完成填装，开始切换数据形态，生成passHost对象
-            for (let i = 0; i < orgList.length; i++) {
-                for (let m = 0; m < orgList[i]['svr'].length; m++) {
-                    let svrId = orgList[i]['svr'][m].host + ':' + String(orgList[i]['svr'][m].port)
-                    if (passHost[svrId] === undefined) {
-                        passHost[svrId] = []
-                    }
-                    passHost[svrId].push(orgList[i])
-                }
-            }
-            let passPre = {}
-            proxyData['changeList'] = []
-            if (proxyData['changeList'] === undefined) {
-                proxyData['changeList'] = []
-            }
-            for (let i = 0; i < proxyData['changeList'].length; i++) {
-                if (proxyData['changeList'][i]['rePath'] === undefined) {
-                    proxyData['changeList'][i]['rePath'] = true
-                }
-                for (let m = 0; m < proxyData['changeList'][i]['svr'].length; m++) {
-                    if (proxyData['changeList'][i]['svr'][m] === 'default') {
-                        proxyData['changeList'][i]['svr'][m] = proxyData['defaultRemote']
-                    }
-                    if (proxyData['svrDict'][proxyData['changeList'][i]['svr'][m]] !== undefined) {
-                        proxyData['changeList'][i]['svr'][m] = proxyData['svrDict'][proxyData['changeList'][i]['svr'][m]]
-                    } else {
-                        var e = new Error();
-                        e.message = "svrDict not exist";
-                        throw e;
-                    }
-                }
-                rebuildRewriteCell(proxyData['changeList'][i], proxyData['defaultRewrite'])
-            }
-            tmpMidList = []
-            orgList = proxyData['changeList']
-            for (let i = 0; i < orgList.length; i++) {
-                for (let m = 0; m < orgList[i]['p'].length; m++) {
-                    // 替换p
-                    let newCell = Object.assign({}, orgList[i])
-                    // 很暴力的替换了
-                    orgList[i]['p'][m] = orgList[i]['p'][m].replace(/\{param\}/, '[^/]+')
-                    if (orgList[i]['addEnd'] === true) {
-                        orgList[i]['p'][m] = orgList[i]['p'][m] + '$'
-                    }
-                    if (orgList[i]['prefix'] !== undefined && orgList[i]['prefix'] !== '' && orgList[i]['prefix'] !== null) {
-                        orgList[i]['p'][m] = orgList[i]['prefix'] + orgList[i]['p'][m]
-                    }
-                    if (orgList[i]['rePath'] === true) {
-                        newCell['p'] = new RegExp(orgList[i]['p'][m])
-                    } else {
-                        newCell['p'] = orgList[i]['p'][m]
-                    }
-                    tmpMidList.push(newCell)
-                }
-            }
-            proxyData['changeList'] = tmpMidList
-            for (let i = 0; i < proxyData['changeList'].length; i++) {
-                for (let m = 0; m < proxyData['changeList'][i]['svr'].length; m++) {
-                    let svrId = proxyData['changeList'][i]['svr'][m].host + ':' + String(proxyData['changeList'][i]['svr'][m].port)
-                    if (passPre[svrId] === undefined) {
-                        passPre[svrId] = []
-                    }
-                    passPre[svrId].push(proxyData['changeList'][i])
-                }
-            }
-            console.log(passPre)
-            return {passHost: passHost, passPre: passPre}
-        } else {
-            var e = new Error();
-            e.message = "proxysetting.json content error";
-            throw e;
         }
-    // return backupUrl
-    } catch (e) {
-        console.log('>>> proxy Setting load fail <<<', e)
-        process.exit()
+    }
+
+    rebuildCellPath (tmpConfPath, pathUseRe) {
+        if (pathUseRe === true) {
+            return new RegExp(tmpConfPath)
+        } else {
+            return tmpConfPath
+        }
+    }
+
+    rebuildCellPathUseRe (pathUseRe) {
+        if (pathUseRe === false) {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    rebuildCellMethod (methodData) {
+        if (methodData === null || methodData === undefined) {
+            return null
+        } else {
+            return methodData
+        }
+    }
+
+    rebuildCellStatus (resStatus) {
+        if (resStatus === undefined || resStatus === null) {
+            return null
+        } else {
+            return parseInt(resStatus)
+        }
+    }
+
+    rebuildCellContent (resContent) {
+        // 输出 null 或者 文本
+        if (resContent === undefined || resContent === null) {
+            return null
+        } else {
+            if (gettype.call(resContent) === '[Object String]') {
+                return resContent
+            } else {
+                return JSON.stringify(resContent)
+            }
+        }
+    }
+
+    rebuildCellReqHeader (reqHeader) {
+        if (reqHeader === undefined || reqHeader === null) {
+            return null
+        } else {
+            return reqHeader
+        }
+    }
+
+    loadConf () {
+        // 读取文件
+        let proxyDataJson = fs.readFileSync('./proxysetting.json', 'utf-8')
+        // 解析json
+        let proxyData = JSON.parse(proxyDataJson)
+        // 重建规则
+        let pathHub = []
+        // 遍历remote主机
+        for (let remoteHost in proxyData) {
+            if (proxyData.hasOwnProperty(remoteHost)) {
+                let hostCell = proxyData[remoteHost]
+                let newList = []
+                for (let i = 0; i < hostCell['proxyList'].length; i++) {
+                    for (let m = 0; m < hostCell['proxyList'][i]["path"].length; m++) {
+                        let tmpSave = JSON.parse(JSON.stringify(hostCell['proxyList'][i]))
+                        tmpSave['path'] = hostCell['proxyList'][i]["path"][m]
+                        newList.push(tmpSave)
+                    }
+                }
+                hostCell['proxyList'] = newList
+
+                for (let i = 0; i < hostCell['proxyList'].length; i++) {
+                    // 替换delay
+                    let orgCell = hostCell['proxyList'][i]
+                    orgCell["resDelay"] = this.rebuildCellDelay(orgCell['resDelay'])
+                    orgCell["reqRewrite"] = this.rebuildCellRewrite(orgCell['reqRewrite'])
+                    orgCell['pathUseRe'] = this.rebuildCellPathUseRe(orgCell['pathUseRe'])
+                    pathHub.push([orgCell['pathUseRe'], orgCell['path']])
+                    orgCell["path"] = this.rebuildCellPath(orgCell['path'], orgCell['pathUseRe'])
+                    orgCell["method"] = this.rebuildCellMethod(orgCell['method'])
+                    orgCell["resStatus"] = this.rebuildCellStatus(orgCell['resStatus'])
+                    orgCell["resContent"] = this.rebuildCellContent(orgCell['resContent'])
+                    orgCell["reqHeader"] = this.rebuildCellReqHeader(orgCell["reqHeader"])
+                    hostCell['proxyList'][i] = orgCell
+                }
+                proxyData[remoteHost] = hostCell
+            }
+        }
+        console.log("all path:")
+        for (let i = 0; i < pathHub.length; i++) {
+            if (pathHub[i][0] === true) {
+                console.log(" " + "RE" + "  " + pathHub[i][1])
+            } else {
+                console.log(" " + "--" + "  " + pathHub[i][1])
+            }
+        }
+        console.log("")
+        return proxyData
     }
 }
 
-var realProxyData = readProxySetting()
-
-module.exports = realProxyData
+module.exports = confController

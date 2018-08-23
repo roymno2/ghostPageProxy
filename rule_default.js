@@ -1,13 +1,10 @@
 'use strict';
 // 用于anyproxy4.0.6版
-var http = require('http');
-var fs = require('fs')
-var comConf = require('./libConf')
-var libBase = require('./libBase')
-
-// var libLogin = require('./libLogin')
-// var libReq = require('./libReq')
-
+const http = require('http');
+const fs = require('fs')
+let {appHubController} = require("./libDevServer")
+const appHub = new appHubController()
+appHub.setRouter()
 module.exports = {
 
   summary: 'the default rule for AnyProxy',
@@ -26,17 +23,9 @@ module.exports = {
    * @returns
    */
   *beforeSendRequest(requestDetail) {
-    if (comConf['passPre'][requestDetail.requestOptions.hostname + ':' + requestDetail.requestOptions.port] !== undefined) {
-      // 此时认定 path: requestDetail.requestOptions.path; host: requestDetail.requestOptions.hostname; port: requestDetail.requestOptions.port
-      let proxyInfo = libBase.findConfMatch(requestDetail.requestOptions.path, comConf['passPre'][requestDetail.requestOptions.hostname + ':' + requestDetail.requestOptions.port])
-      if (proxyInfo !== null) {
-        const newRequestOptions = requestDetail.requestOptions;
-        let lastPath = newRequestOptions.path
-        newRequestOptions.path = libBase.runRewrite(newRequestOptions.path, proxyInfo['rewrite'])
-        console.log('>>> change path: ' + lastPath + ' -> ' + newRequestOptions.path)
-        return requestDetail
-      }
-    }
+    // 负责记录请求，在此处记录的原因是返回请求可能很慢
+    appHub.recordCountAdd()
+    appHub.recordListAdd(requestDetail)
     return null;
   },
 
@@ -48,23 +37,15 @@ module.exports = {
    * @param {object} responseDetail
    */
   *beforeSendResponse(requestDetail, responseDetail) {
-    if (comConf['passHost'][requestDetail.requestOptions.hostname + ':' + requestDetail.requestOptions.port] !== undefined) {
-      // 此时认定 path: requestDetail.requestOptions.path; host: requestDetail.requestOptions.hostname; port: requestDetail.requestOptions.port
-      let proxyInfo = libBase.findConfMatch(requestDetail.requestOptions.path, comConf['passHost'][requestDetail.requestOptions.hostname + ':' + requestDetail.requestOptions.port])
-      if (proxyInfo !== null) {
-        const finResponseDetail = responseDetail.response;
-        if (proxyInfo['contentFunc'] !== null && proxyInfo['contentFunc'] !== undefined) {
-          return libBase.responseContentFunc(finResponseDetail, proxyInfo, proxyInfo['delay'], requestDetail, responseDetail)
-        } else if (proxyInfo['rep'] !== null && proxyInfo['rep'] !== undefined) {
-          return libBase.responseContentReplace(finResponseDetail, proxyInfo, proxyInfo['delay'], requestDetail.requestOptions.method, requestDetail.requestOptions.path, requestDetail.requestOptions.headers)
-        } else {
-          return libBase.responseDelayReturn(finResponseDetail, proxyInfo, proxyInfo['delay'])
-        }
-      }
+    // 检查是否匹配代理
+    let proxyInfo = appHub.matchProxy(requestDetail);
+    if (proxyInfo !== null) {
+      // 如果匹配则执行二重发送动作
+      return appHub.runProxyForward(proxyInfo, requestDetail, responseDetail)
+    } else {
+      return null
     }
-    return null
   },
-
 
   /**
    * default to return null

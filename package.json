@@ -9,7 +9,8 @@
     "base": "node ./node_modules/anyproxy/bin/anyproxy --port 8084 --rule ./rule_base.js"
   },
   "dependencies": {
-    "anyproxy": "^4.0.10"
+    "anyproxy": "^4.0.10",
+    "express": "^4.16.3"
   },
   "devDependencies": {},
   "engines": {
