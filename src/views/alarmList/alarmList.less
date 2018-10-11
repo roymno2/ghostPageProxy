@@ -1,0 +1,37 @@
+.alarm-list-container {
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 3px -1px rgba(0, 0, 0, 0.3);
+}
+
+.alarm-list-pagination, .alarm-list-tools-bar{
+  padding: 15px;
+  text-align: right;
+}
+.alarm-list-tools-bar {
+  border-bottom: 1px solid #ededef;
+
+  .el-button + .el-dropdown {
+    margin-left: 10px;
+  }
+}
+.alarm-list-table{
+  padding: 0 15px;
+  .alarm-list-alarm-color-container {
+    padding: 0;
+    .cell {
+      color: transparent;
+      padding: 0;
+      line-height: 36px + 12px + 12px;
+    }
+  }
+
+  .alarm-list-alarm-color {
+    height: 100%;
+  }
+
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409eff;
+  }
+}

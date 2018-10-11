@@ -1,10 +1,9 @@
 'use strict';
 // 用于anyproxy4.0.6版
-const http = require('http');
-const fs = require('fs')
-let {appHubController} = require("./libDevServer")
-const appHub = new appHubController()
-appHub.setRouter()
+
+const appHub = require("./libDevServer")
+
+
 module.exports = {
 
   summary: 'the default rule for AnyProxy',
@@ -24,8 +23,6 @@ module.exports = {
    */
   *beforeSendRequest(requestDetail) {
     // 负责记录请求，在此处记录的原因是返回请求可能很慢
-    appHub.recordCountAdd()
-    appHub.recordListAdd(requestDetail)
     return null;
   },
 
@@ -38,6 +35,7 @@ module.exports = {
    */
   *beforeSendResponse(requestDetail, responseDetail) {
     // 检查是否匹配代理
+    console.log('get one')
     let proxyInfo = appHub.matchProxy(requestDetail);
     if (proxyInfo !== null) {
       // 如果匹配则执行二重发送动作

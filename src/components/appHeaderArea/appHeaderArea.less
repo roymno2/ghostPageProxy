@@ -1,0 +1,38 @@
+@import (reference) "../../assets/mixins/variables.mixin.less";
+@base-margin: @app-base-margin;
+@area-border-color: @app-inner-border-color;
+.app-header-area {
+  // width: 100%;
+  height: 3 * @app-base-margin;
+  display: flex;
+  align-items: center;
+  stroke: @area-border-color;
+}
+
+.app-header-area-left, .app-header-area-right {
+  width: 1.5 * @app-base-margin;
+  height: 2 * @app-base-margin;
+  flex-shrink: 0;
+  &.hc {
+    width: 3 * @app-base-margin;
+    height: 3 * @app-base-margin;
+  }
+}
+
+.app-header-area-slot {
+  height: 2 * @app-base-margin;
+  box-sizing: border-box;
+  border-top: 0.1rem solid @area-border-color;
+  border-bottom: 0.1rem solid @area-border-color;
+  flex-grow: 1;
+  position: relative;
+}
+
+.header-rotate {
+  transform: rotate(180deg);
+}
+.app-header-area-block{
+  width: 100%;
+  height: 100%;
+  background: burlywood;
+}

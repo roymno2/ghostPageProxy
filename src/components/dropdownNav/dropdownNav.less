@@ -1,0 +1,84 @@
+@import (reference) "../../assets/mixins/variables.mixin.less";
+
+@dropdown-nav-font-size: 1em;
+
+@dropdown-nav-link-font-size-ratio: 0.8;
+
+@dropdown-nav-padding: 0.25em;
+
+@app-page-border-radius: 5px;
+
+@dropdown-z-index: 1000;
+
+
+.dropdown-nav-container{
+  height:100%;
+  position: relative;
+  background-color: #1d4884;
+  font-size: 26px;
+  &:hover{
+    color: @active-color;
+    .dropdown-nav-links-container{
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+.dropdown-nav-links-container{
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin: 0px;
+  list-style: none;
+  padding: 10px 0px;
+  border-radius: @app-page-border-radius;
+  background-color: #fff;
+  box-shadow: 0 0.05em 0.3em @dropdown-shadow-color;
+  border: 1px solid @dropdown-border-color;
+  visibility: hidden;
+  opacity: 0;
+  overflow: hidden;
+  transition: visibility 200ms, opacity 200ms;
+  z-index: @dropdown-z-index;
+  &.open-left{
+    left: auto;
+    right: 0;
+  }
+}
+
+.open-left{
+  .dropdown-nav-links-container{
+    left: auto;
+    right: 0;
+    margin: 0 @dropdown-nav-padding 0 0;
+  }
+}
+
+.dropdown-nav-link{
+  font-size: 1em * @dropdown-nav-link-font-size-ratio;
+  line-height: 1em;
+  a.dropdown-nav-link-cell-not-current {
+    color: #333;
+  }
+  a{
+    display: block;
+    color: #1890FF;
+    white-space: nowrap;
+    min-width: 5em;
+    padding: 0.35em 0.75em;
+    text-decoration: none;
+    // font-size: 1em * @dropdown-nav-link-font-size-ratio;
+    &:hover{
+      background-color: @hover-bg-color;
+    }
+    &.v-link-active, &.manual-active{
+      color: @active-color;
+    }
+    span{
+      display: inline-block;
+      font-size: 0.8em;
+      vertical-align: baseline;
+    }
+
+  }
+}

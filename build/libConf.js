@@ -5,6 +5,7 @@ var gettype = Object.prototype.toString
 class confController {
     //构造函数
     constructor() {
+      this.confFilePath = './build/proxysetting.json'
     }
 
     rebuildCellDelay (delayCell) {
@@ -51,7 +52,7 @@ class confController {
     }
 
     rebuildCellMethod (methodData) {
-        if (methodData === null || methodData === undefined) {
+        if (methodData === null || methodData === undefined || methodData === '') {
             return null
         } else {
             return methodData
@@ -59,7 +60,7 @@ class confController {
     }
 
     rebuildCellStatus (resStatus) {
-        if (resStatus === undefined || resStatus === null) {
+        if (resStatus === undefined || resStatus === null || resStatus === 0 || resStatus === '0') {
             return null
         } else {
             return parseInt(resStatus)
@@ -79,47 +80,70 @@ class confController {
         }
     }
 
-    rebuildCellReqHeader (reqHeader) {
-        if (reqHeader === undefined || reqHeader === null) {
+    rebuildCellWebHeader (webHeader) {
+        if (webHeader === undefined || webHeader === null) {
             return null
         } else {
-            return reqHeader
+            return webHeader
         }
+    }
+    saveConf (content) {
+      fs.writeFileSync(this.confFilePath, content)
+    }
+    loadConfOrg () {
+      // 读取文件
+      return fs.readFileSync(this.confFilePath, 'utf-8')
+      // 解析json
     }
 
     loadConf () {
         // 读取文件
-        let proxyDataJson = fs.readFileSync('./proxysetting.json', 'utf-8')
+        let proxyDataJson = fs.readFileSync(this.confFilePath, 'utf-8')
         // 解析json
-        let proxyData = JSON.parse(proxyDataJson)
+        let proxyDataOrg = JSON.parse(proxyDataJson)
         // 重建规则
         let pathHub = []
+        let tmpStrList = proxyDataOrg['webHost'].split(':')
+        proxyDataOrg['webHost'] = tmpStrList[0]
+        if (tmpStrList[1] === undefined) {
+          proxyDataOrg['webPort'] = "80"
+        } else {
+          proxyDataOrg['webPort'] = tmpStrList[1]
+        }
+        let tmpOrgHostPartList = proxyDataOrg['orgHost'].split(':')
+        if (tmpOrgHostPartList[1] === undefined) {
+          proxyDataOrg['orgHost'] = proxyDataOrg['orgHost'] + ':80'
+        }
+        let proxyData = {}
+        proxyData[proxyDataOrg['orgHost']] = proxyDataOrg
+
+
         // 遍历remote主机
         for (let remoteHost in proxyData) {
             if (proxyData.hasOwnProperty(remoteHost)) {
                 let hostCell = proxyData[remoteHost]
-                let newList = []
-                for (let i = 0; i < hostCell['proxyList'].length; i++) {
-                    for (let m = 0; m < hostCell['proxyList'][i]["path"].length; m++) {
-                        let tmpSave = JSON.parse(JSON.stringify(hostCell['proxyList'][i]))
-                        tmpSave['path'] = hostCell['proxyList'][i]["path"][m]
-                        newList.push(tmpSave)
-                    }
-                }
-                hostCell['proxyList'] = newList
+                // let newList = []
+                // for (let i = 0; i < hostCell['proxyList'].length; i++) {
+                //     for (let m = 0; m < hostCell['proxyList'][i]["orgPath"].length; m++) {
+                //         let tmpSave = JSON.parse(JSON.stringify(hostCell['proxyList'][i]))
+                //         tmpSave['path'] = hostCell['proxyList'][i]["orgPath"][m]
+                //         newList.push(tmpSave)
+                //     }
+                // }
+                // hostCell['proxyList'] = newList
 
                 for (let i = 0; i < hostCell['proxyList'].length; i++) {
                     // 替换delay
                     let orgCell = hostCell['proxyList'][i]
                     orgCell["resDelay"] = this.rebuildCellDelay(orgCell['resDelay'])
-                    orgCell["reqRewrite"] = this.rebuildCellRewrite(orgCell['reqRewrite'])
-                    orgCell['pathUseRe'] = this.rebuildCellPathUseRe(orgCell['pathUseRe'])
-                    pathHub.push([orgCell['pathUseRe'], orgCell['path']])
-                    orgCell["path"] = this.rebuildCellPath(orgCell['path'], orgCell['pathUseRe'])
-                    orgCell["method"] = this.rebuildCellMethod(orgCell['method'])
+                    orgCell["webRewrite"] = this.rebuildCellRewrite(orgCell['webRewrite'])
+                    orgCell['orgUseRe'] = this.rebuildCellPathUseRe(orgCell['orgUseRe'])
+                    pathHub.push([orgCell['orgUseRe'], orgCell['orgPath']])
+                    orgCell["orgPath"] = this.rebuildCellPath(orgCell['orgPath'], orgCell['orgUseRe'])
+                    orgCell["orgMethod"] = this.rebuildCellMethod(orgCell['orgMethod'])
                     orgCell["resStatus"] = this.rebuildCellStatus(orgCell['resStatus'])
                     orgCell["resContent"] = this.rebuildCellContent(orgCell['resContent'])
-                    orgCell["reqHeader"] = this.rebuildCellReqHeader(orgCell["reqHeader"])
+                    orgCell["webHeader"] = this.rebuildCellWebHeader(orgCell["webHeader"])
                     hostCell['proxyList'][i] = orgCell
                 }
                 proxyData[remoteHost] = hostCell

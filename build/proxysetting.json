@@ -1,0 +1,18 @@
+{
+    "orgHost": "192.168.1.46:80",
+    "webHost": "192.168.1.46:80",
+    "proxyList": [
+        {
+            "orgMethod": "",
+            "orgPath": "^/apm/api/getMetricValue",
+            "resStatus": "0",
+            "orgUseRe": true,
+            "webRewrite": {
+                "from": "",
+                "to": "",
+                "useRe": true
+            },
+            "webHeader": {}
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="70px" height="70px" viewBox="0 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>京东</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="49.0400761%" y1="100%" x2="47.9801578%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#889AFF" offset="0%"></stop>
+            <stop stop-color="#53A0FD" offset="47.5247532%"></stop>
+            <stop stop-color="#51CAEC" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="52" height="52" rx="26"></rect>
+        <filter x="-19.2%" y="-15.4%" width="138.5%" height="138.5%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.647050498 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="京东">
+            <g transform="translate(9.000000, 9.000000)">
+                <g id="Rectangle-5">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                    <use fill="#181821" fill-rule="evenodd" xlink:href="#path-2"></use>
+                    <rect stroke="url(#linearGradient-1)" stroke-width="1" x="0.5" y="0.5" width="51" height="51" rx="25.5"></rect>
+                </g>
+                <rect id="Rectangle-5" fill="#F33217" x="5" y="5" width="42" height="42" rx="21"></rect>
+                <g id="京东logo" transform="translate(10.000000, 20.000000)" fill-rule="nonzero" fill="#FFFFFF">
+                    <path d="M15,6.7627961 L15,3 L1,3 L1,6.7627961 L1,6.77246099 L6.95379077,6.77246099 L6.95379077,10.3672065 C6.95379077,11.0319138 6.83786133,11.3630841 6.61071024,11.563088 C6.38179374,11.7640782 6.03145536,11.8694057 5.5687184,11.8780844 L5.5687184,13 C6.77175604,12.9615377 7.6517213,12.6999941 8.21057574,12.2106353 C8.76589933,11.7228545 9.0469939,10.9733328 9.0469939,9.97035444 L9.04699388,6.77246099 L15,6.77246099 L15,6.7627961 Z M12.9831024,5.59827609 L3.02003615,5.59827609 L3.02003615,4.17398765 L12.9831024,4.17398765 L12.9831024,5.59827609 Z" id="Shape"></path>
+                    <polygon id="Shape" points="8.55438601 0 6.45521268 0 6.45521268 0.860315933 0 0.860315933 0 2 15 2 15 0.860315933 8.55438601 0.860315933"></polygon>
+                    <path d="M0,13 L1.08197159,13 C3.39569883,10.9381969 4,8 4,8 L1.91068168,8 C1.65635157,10.0794767 0.801282328,11.8308068 0,13" id="Shape"></path>
+                    <path d="M11,8 C11,8 11.6019184,10.9389257 13.9155476,13 L15,13 C14.1975017,11.8308068 13.3425385,10.0802055 13.0882445,8 L11,8 Z" id="Shape"></path>
+                    <path d="M17,13 L18.081659,13 C20.3962668,10.9381969 21,8 21,8 L18.9115249,8 C18.6561679,10.0794767 17.8008197,11.8308068 17,13" id="Shape"></path>
+                    <path d="M28,8 C28,8 28.602913,10.9389257 30.916752,13 L32,13 C31.1987885,11.8308068 30.3432364,10.0802055 30.0889938,8 L28,8 Z" id="Shape"></path>
+                    <path d="M22.2752952,0.903063022 L22.6866723,0 L20.583404,0 L20.1708526,0.903063022 L17,0.903063022 L17,2.08986609 L19.6271773,2.08986609 L17.513145,6.70487906 L23.5986692,6.70487906 L23.5986692,10.3386659 C23.5986692,11.0407381 23.4847674,11.3456141 23.257551,11.5476019 C23.0277904,11.7507861 22.6808011,11.8574628 22.2189314,11.866635 L22.2189314,13 C23.4174441,12.9615166 24.2953878,12.6969186 24.853937,12.2022179 C25.4103334,11.7091124 25.691565,10.9514088 25.691565,9.93768117 L25.691565,6.70487906 L31.4876378,6.70487906 L31.4876378,6.64825069 L31.4876378,5.51767719 L25.691565,5.51767719 L25.691565,2.96820406 L23.5986692,2.96820406 L23.5986692,5.51787659 L20.1865092,5.51787659 L21.7394481,2.09006548 L32,2.09006548 L32,0.903063022 L22.2752952,0.903063022 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

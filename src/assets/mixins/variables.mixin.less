@@ -1,0 +1,109 @@
+@white: #fff;
+@black: #000;
+@gray: #ccc;
+@yellow: #f8e71c;
+@red: #ff4d61;
+@orange: #ffdd99;
+@light-red: #ff6b8c;
+@green: #66ff99;
+@light-green: #42b983;
+@dark-green: #00cc4d;
+@purple: #ac9bff;
+@light-blue: #00B4FF;
+@blue: #2d8cf0;
+
+@primary-color-1: #e6f7ff;
+@primary-color-2: #bae7ff;
+@primary-color-3: #91d5ff;
+@primary-color-4: #69c0ff;
+@primary-color-5: #40a9ff;
+@primary-color-6: #1890ff;
+@primary-color-7: #096dd9;
+@primary-color-8: #0050b3;
+@primary-color-9: #003a8c;
+@primary-color-10: #002766;
+
+
+@active-color: @primary-color-5;
+@com-border-color: fadeout(@active-color, 80%);
+
+@main-color: @black;
+@success-color: @green;
+@info-color: @light-blue;
+@warning-color: @orange;
+@error-color: @red;
+
+@light-background-color: fadeout(@main-color, 95%);
+@hover-bg-color: fadeout(@active-color, 90%);
+
+@border-color: fadeout(@main-color, 70%);
+@form-border-color: @border-color;
+@dropdown-border-color: @border-color;
+@divider-color: fadeout(@main-color, 90%);
+
+@title-color: fadeout(@main-color, 25%);
+@text-color: fadeout(@black, 40%);
+@text-title-color: fadeout(@main-color, 30%);
+@caption-color: fadeout(@main-color, 57%);
+@disable-color: fadeout(@main-color, 75%);
+@placeholder-color: fadeout(@main-color, 80%);
+
+@shadow-color: fadeout(@main-color, 50%);
+@light-shadow-color: fadeout(@main-color, 75%);
+@item-box-shadow: 0 0px 3px -1px rgba(0, 0, 0, 0.75);
+@dropdown-shadow-color: hsla(0, 0%, 39%, .2);
+
+@page-background-color: @white;
+
+@page-width: 600px;
+@sidebar-width: 200px;
+
+@page-header-height: 60px;
+
+@page-padding-left: 24px;
+
+@content-padding-top: 5px;
+@content-padding-left: 40px;
+@content-padding-bottom: 30px;
+
+@message-z-index: 299;
+@notice-z-index: 299;
+@page-mask-z-index: 259;
+@page-backdrop-z-index: 249;
+
+@btn-border-radius: 4px;
+@btn-border-radius-small: 3px;
+@btn-disable-color: #bbbec4;
+
+@input-text-color: #495060;
+@input-placeholder-color: #bbbec4;
+@input-height-base: 2.5em;
+@line-height-base: 2.5;
+@input-height-small: 2em;
+@line-height-small: 2;
+@input-bg-color: #fff;
+
+@main-color: #aadeff;
+@content-font-family: "Alternate", "Helvetica Neue", Helvetica, "PingFang", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+@monospaced-font-family: Consolas, Monaco, monospace;
+@app-base-margin: 0.8rem;
+@page-loading-zIndex: 999;
+@page-bg-color: #09090d;
+@app-chart-border-color: #6f89d4;
+@app-inner-border-color: #69b2e8;
+@app-inner-bg-color: fadeout(@main-color, 90%);
+@app-inner-active-bg-color: fadeout(@main-color, 80%);
+@app-inner-active-border-color: fadeout(@app-chart-border-color, 50%);
+.g-form-disabled-cursor {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.hide-scrollbar {
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
+}
+@main-second-font-color: #b3c4d4;
+@main-second-color:#2beefc;
+@main-four-font-color: #94c1ff;

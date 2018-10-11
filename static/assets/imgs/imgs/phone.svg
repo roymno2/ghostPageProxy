@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="70px" height="70px" viewBox="0 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>手机</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="49.0400761%" y1="100%" x2="47.9801578%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#889AFF" offset="0%"></stop>
+            <stop stop-color="#53A0FD" offset="47.5247532%"></stop>
+            <stop stop-color="#51CAEC" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="52" height="52" rx="26"></rect>
+        <filter x="-19.2%" y="-15.4%" width="138.5%" height="138.5%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.647050498 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <filter x="-34.4%" y="-14.0%" width="168.8%" height="144.0%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0363605064   0 0 0 0 0.388601551   0 0 0 0 0.709954294  0 0 0 0.194321784 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="手机">
+            <g transform="translate(9.000000, 9.000000)">
+                <g id="Rectangle-5">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                    <use fill="#181821" fill-rule="evenodd" xlink:href="#path-2"></use>
+                    <rect stroke="url(#linearGradient-1)" stroke-width="1" x="0.5" y="0.5" width="51" height="51" rx="25.5"></rect>
+                </g>
+                <rect id="Rectangle-5" fill="#16A1F2" x="5" y="5" width="42" height="42" rx="21"></rect>
+                <g id="个人中心手机" filter="url(#filter-4)" transform="translate(18.000000, 14.000000)" fill-rule="nonzero" fill="#FFFFFF">
+                    <path d="M13.5999634,0 L2.39997806,0 C1.07996232,0 0,1.05467445 0,2.34374643 L0,22.6562536 C0,23.9453255 1.07996232,25 2.39997806,25 L13.5999634,25 C14.9200084,25 16,23.9453541 16,22.6562536 L16,2.34374643 C16,1.05467445 14.9200377,0 13.5999634,0 Z M5.79124822,1.18710533 L10.208664,1.18710533 C10.4267986,1.18710533 10.6036416,1.35977416 10.6036416,1.57282384 C10.6036416,1.78584492 10.4268279,1.95848518 10.208664,1.95848518 L5.79124822,1.95848518 C5.57311363,1.95848518 5.39629994,1.78581635 5.39629994,1.57282384 C5.39632917,1.35974559 5.5731136,1.18710533 5.79124822,1.18710533 Z M8.00001461,23.4375786 C7.11638512,23.4375786 6.39999999,22.7379583 6.39999999,21.8749857 C6.39999999,21.0120131 7.11635587,20.3125357 8.00001461,20.3125357 C8.88361482,20.3125357 9.60008777,21.0120417 9.60008777,21.8749857 C9.60005852,22.7378726 8.88361485,23.4375786 8.00001461,23.4375786 Z M14.4000146,18.7500286 L1.59998536,18.7500286 L1.59998536,3.12501427 L14.4000146,3.12501427 L14.4000146,18.7500286 Z" id="Shape" transform="translate(8.000000, 12.500000) scale(-1, 1) translate(-8.000000, -12.500000) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
