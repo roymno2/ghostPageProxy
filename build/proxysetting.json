@@ -1,15 +1,27 @@
 {
-    "orgHost": "192.168.1.46:80",
-    "webHost": "192.168.1.46:80",
+    "orgHost": "127.0.0.1:8085",
+    "webHost": "192.168.1.113:9999",
     "proxyList": [
         {
-            "orgMethod": "",
-            "orgPath": "^/apm/api/getMetricValue",
+            "orgMethod": "GET",
+            "orgPath": "^/api/task/list",
             "resStatus": "0",
             "orgUseRe": true,
             "webRewrite": {
-                "from": "",
-                "to": "",
+                "from": "^/api/task/list",
+                "to": "/task/list",
+                "useRe": true
+            },
+            "webHeader": {}
+        },
+        {
+            "orgMethod": "",
+            "orgPath": "^/api/task",
+            "resStatus": "0",
+            "orgUseRe": true,
+            "webRewrite": {
+                "from": "^/api/setheader",
+                "to": "/api/setheader",
                 "useRe": true
             },
             "webHeader": {}

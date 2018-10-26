@@ -14,7 +14,6 @@ class appHubController {
         this.recordHistoryLimit = 1000;
         // 请求缓存池，最近500条
         this.recordHistoryList = [];
-        this.recordHistoryIdDict = {};
         this.proxySettingController = new confController()
         this.proxyConf = this.proxySettingController.loadConf()
     }
@@ -163,7 +162,6 @@ class appHubController {
         }
 
         // 加入缓存
-        this.recordHistoryIdDict[tmpReqInfo.id] = tmpReqInfo
         this.recordHistoryList.unshift(tmpReqInfo);
         this.recordListClean()
         return tmpReqInfo
@@ -192,13 +190,6 @@ class appHubController {
         let outLen = this.recordHistoryList.length - this.recordHistoryLimit;
         if (outLen > 0) {
             let deleteCount = 0
-            for (let i = this.recordHistoryLimit - 1; i < (this.recordHistoryLimit - 1 + outLen); i++) {
-              if (this.recordHistoryIdDict.hasOwnProperty(this.recordHistoryList[i].id)) {
-                delete this.recordHistoryIdDict[this.recordHistoryList[i].id]
-                deleteCount = deleteCount + 1
-              }
-            }
-            console.log('delete from id dict', deleteCount)
             this.recordHistoryList.splice(this.recordHistoryLimit - 1, outLen)
         }
     }

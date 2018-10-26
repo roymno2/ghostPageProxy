@@ -35,7 +35,6 @@ module.exports = {
    */
   *beforeSendResponse(requestDetail, responseDetail) {
     // 检查是否匹配代理
-    console.log('get one')
     let proxyInfo = appHub.matchProxy(requestDetail);
     if (proxyInfo !== null) {
       // 如果匹配则执行二重发送动作
