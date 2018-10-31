@@ -151,6 +151,12 @@ function runRebuildHeaders (webHeader, webHost, header) {
     if (webHeader.hasOwnProperty('referer')) {
         webHeader['referer'] = 'http://' + webHost + '/'
     }
+    if (webHeader.hasOwnProperty('Accept-Encoding')) {
+      delete webHeader['Accept-Encoding']
+    }
+    if (webHeader.hasOwnProperty('accept-encoding')) {
+      delete webHeader['accept-encoding']
+    }
     if (header !== null) {
         for (let i in header){
             webHeader[i] = header[i]
