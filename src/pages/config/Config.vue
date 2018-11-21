@@ -1,88 +1,86 @@
 <template>
-  <div class="u-main-container">
-    <div class="u-main-header">
-      <page-header></page-header>
-    </div>
-    <div class="u-main-content flex-outer">
-      <div class="u-main-content-inside flex-inner">
-        <div class="u-main-content-inner">
-          <div class="f-row-list">
-            <div class="f-fix flex-outer">
-              <el-row>
-                <el-col :span="3">
-                  <el-button size="mini" @click="readConfig()" type="danger">加载</el-button>
-                  <el-badge is-dot class="item" :hidden="!findDiff">
-                    <el-button size="mini" @click="saveConfig()" type="primary">保存</el-button>
-                  </el-badge>
-                </el-col>
-              </el-row>
-              <el-row v-if="config">
-                <el-form :model="config" label-width="80px">
-                  <el-form-item label="原始主机">
-                    <el-input size="mini" v-model="config.orgHost" style="width:300px"></el-input>
-                  </el-form-item>
-                  <el-form-item label="转发主机">
-                    <el-input size="mini" v-model="config.webHost" style="width:300px"></el-input>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button @click="addItem()" type="primary" size="mini">添加规则</el-button>
-                    <el-input v-model="cookieVal" ></el-input>
-                    <el-button @click="allCookieSet">设置全部cookie</el-button>
-                    <el-button @click="allCookieDel">删除全部cookie</el-button>
-                  </el-form-item>
-                </el-form>
-              </el-row>
-            </div>
-            <div class="f-grow-1 flex-outer">
-              <div class="flex-inner">
-                  <el-table v-if="config" :data="config.proxyList" style="width: 100%" size="mini" border>
-                    <el-table-column
-                      fixed
-                      type="index"
-                      width="80"
-                      label="序号">
-                    </el-table-column>
-                    <el-table-column
-                      fixed
-                      width="120"
-                      prop="orgMethod"
-                      label="Method限制">
-                      <template slot-scope="scope">
-                        {{scope.row.orgMethod ? scope.row.orgMethod : '不限'}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      label="匹配路径"
-                      prop="orgPath">
-                    </el-table-column>
-                    <el-table-column
-                      label="header">
-                      <template slot-scope="scope" v-if="scope.row.webHeader !== null && scope.row.webHeader !== undefined">
-                        <pre>{{JSON.stringify(scope.row.webHeader, null, 4)}}</pre>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      label="替换路径"
-                      prop="orgPath">
-                      <template slot-scope="scope">
-                        <span v-show="scope.row.webRewrite.from !== '' || scope.row.webRewrite.to !== ''">
-                          {{scope.row.webRewrite.from + ' -> ' + scope.row.webRewrite.to}}
-                        </span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      label="操作"
-                      width="160">
-                      <template slot-scope="scope">
-                        <el-button @click="editItem(scope.$index)" type="text" size="small">编辑</el-button>
-                        <el-button @click="copyItem(scope.$index)" type="text" size="small">复制</el-button>
-                        <el-button @click="deleteItem(scope.$index)" type="text" size="small">删除</el-button>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-              </div>
-            </div>
-          </div>
+  <div class="u-main-content-inner">
+    <div class="f-row-list">
+      <div class="f-fix flex-outer">
+        <el-row v-if="config">
+          <el-form :model="config" label-width="80px" size="mini">
+            <el-form-item>
+              <el-button size="mini" @click="readConfig()" type="danger">从文件加载配置</el-button>
+              <el-badge is-dot class="item" :hidden="!findDiff">
+                <el-button size="mini" @click="saveConfig()" type="primary">保存并应用</el-button>
+              </el-badge>
+            </el-form-item>
+            <el-form-item label="详细记录">
+              <el-switch v-if="config"
+                         v-model="config.debug"
+                         active-color="#13ce66"
+                         inactive-color="#ccc">
+              </el-switch>
+            </el-form-item>
+            <el-form-item label="原始主机">
+              <el-input size="mini" v-model="config.orgHost" style="width:300px"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-input size="mini" v-model="config.webHost" style="width:300px"></el-input>
+            </el-form-item>
+            <el-form-item label="批量设置cookie">
+              <textarea v-model="cookieVal" style="width:100%;min-height: 100px;"></textarea>
+              <el-button @click="allCookieDel">删除全部规则的cookie</el-button>
+              <el-button @click="allCookieSet" type="primary">设置全部规则的cookie</el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button @click="addItem()" type="primary" size="mini">添加规则条目</el-button>
+            </el-form-item>
+          </el-form>
+        </el-row>
+      </div>
+      <div class="f-grow-1 flex-outer">
+        <div class="flex-inner">
+            <el-table v-if="config" :data="config.proxyList" style="width: 100%" size="mini" border>
+              <el-table-column
+                fixed
+                type="index"
+                width="80"
+                label="序号">
+              </el-table-column>
+              <el-table-column
+                fixed
+                width="120"
+                prop="orgMethod"
+                label="Method限制">
+                <template slot-scope="scope">
+                  {{scope.row.orgMethod ? scope.row.orgMethod : '不限'}}
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="匹配路径"
+                prop="orgPath">
+              </el-table-column>
+              <el-table-column
+                label="header">
+                <template slot-scope="scope" v-if="scope.row.webHeader !== null && scope.row.webHeader !== undefined">
+                  <pre>{{JSON.stringify(scope.row.webHeader, null, 4)}}</pre>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="替换路径"
+                prop="orgPath">
+                <template slot-scope="scope">
+                  <span v-show="scope.row.webRewrite.from !== '' || scope.row.webRewrite.to !== ''">
+                    {{scope.row.webRewrite.from + ' -> ' + scope.row.webRewrite.to}}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                width="160">
+                <template slot-scope="scope">
+                  <el-button @click="editItem(scope.$index)" type="text" size="small">编辑</el-button>
+                  <el-button @click="copyItem(scope.$index)" type="text" size="small">复制</el-button>
+                  <el-button @click="deleteItem(scope.$index)" type="text" size="small">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
         </div>
       </div>
     </div>
@@ -131,7 +129,7 @@
 import $ from 'jquery'
 import pageHeader from '../../components/pageHeader/PageHeader'
 export default {
-  name: 'Main',
+  name: 'config',
   components: {
     'page-header': pageHeader
   },
@@ -230,6 +228,10 @@ export default {
         try {
           self.config = JSON.parse(data)
           self.lastLoad = JSON.stringify(data, null, 4)
+          self.$message({
+            type: 'success',
+            message: '加载完成'
+          })
           console.log(self.config)
         } catch (e) {
           self.$message({

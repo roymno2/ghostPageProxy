@@ -16,6 +16,7 @@ class appHubController {
         this.recordHistoryList = [];
         this.proxySettingController = new confController()
         this.proxyConf = this.proxySettingController.loadConf()
+        this.proxyConfDebug = this.proxySettingController.loadConfDebug()
     }
     loadConf () {
       return this.proxySettingController.loadConfOrg()
@@ -23,12 +24,13 @@ class appHubController {
     saveConf (content) {
       this.proxySettingController.saveConf(content)
       this.proxyConf = this.proxySettingController.loadConf()
+      this.proxyConfDebug = this.proxySettingController.loadConfDebug()
     }
     getHistory () {
       return this.recordHistoryList
     }
     // 负责检查请求是否有匹配
-  matchProxy (requestDetail) {
+    matchProxy (requestDetail) {
         // 检查是否有匹配的主机代理配置
         if (this.proxyConf.hasOwnProperty(requestDetail.requestOptions.hostname + ':' + requestDetail.requestOptions.port) === true) {
             let hostProxyConfCell = this.proxyConf[requestDetail.requestOptions.hostname + ':' + requestDetail.requestOptions.port]
@@ -84,7 +86,11 @@ class appHubController {
         }
         // 记录匹配到的
         let tmpReqInfo = this.recordListAdd(requestDetail, proxyInfo["webHost"], proxyInfo["webPort"], proxyInfo["webPath"], proxyInfo["webHeader"])
-        return libBase.responseContentReplace(proxyInfo, requestDetail, responseDetail, tmpReqInfo)
+        if (this.proxyConfDebug === true) {
+          return libBase.responseContentReplace(proxyInfo, requestDetail, responseDetail, tmpReqInfo)
+        } else {
+          return libBase.responseContentReplace(proxyInfo, requestDetail, responseDetail, null)
+        }
         // return null
     }
 

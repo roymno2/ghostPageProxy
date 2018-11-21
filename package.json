@@ -16,7 +16,7 @@
     "eve": "^0.5.4",
     "jquery": "^3.3.1",
     "lodash": "^4.17.5",
-    "moment": "^2.20.1",
+    "moment": "^2.22.2",
     "node.extend": "^2.0.0",
     "snapsvg": "^0.5.1",
     "snapsvg-cjs": "0.0.6",

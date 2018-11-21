@@ -96,6 +96,13 @@ class confController {
       // 解析json
     }
 
+    loadConfDebug () {
+      let proxyDataJson = fs.readFileSync(this.confFilePath, 'utf-8')
+      // 解析json
+      let proxyDataOrg = JSON.parse(proxyDataJson)
+      return proxyDataOrg['debug']
+    }
+
     loadConf () {
         // 读取文件
         let proxyDataJson = fs.readFileSync(this.confFilePath, 'utf-8')

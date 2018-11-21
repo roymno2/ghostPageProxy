@@ -1,10 +1,33 @@
 'use strict'
 const bodyParser = require('body-parser')
 const express = require('express')
+var gpWsHistory = ''
+var WebSocketServer = require('ws').Server
+var wssMain = new WebSocketServer({ port: 8181 })
+var wsHandler = undefined
 class webHubController {
   constructor(appHubObject) {
+    this.initws()
     let apiObject = this.getApi(appHubObject)
     this.setWeb(apiObject)
+  }
+
+  initws () {
+    try {
+      wssMain.on('connection', function (ws) {
+        wsHandler = ws
+        gpWsHistory = gpWsHistory + 'client connected\n'
+        ws.on('message', function (message) {
+          gpWsHistory = gpWsHistory + 'client send: \n' + message + '\n'
+        })
+        ws.on('error', function () {
+          gpWsHistory = gpWsHistory + 'connection error \n'
+        })
+        ws.on('close', function () {
+          gpWsHistory = gpWsHistory + 'client close\n'
+        })
+      })
+    } catch (e) {}
   }
 
   getApi (appHubObject) {
@@ -38,6 +61,23 @@ class webHubController {
         } catch (e) {
           res.json(null)
         }
+      })
+      router.post('/getWsHistory', (req, res) => {
+        res.json({'data': gpWsHistory, 'state': 0})
+      })
+      router.post('/clearWsHistory', (req, res) => {
+        gpWsHistory = ''
+        res.json({'data': '', 'state': 0})
+      })
+      router.post('/sendWs', (req, res) => {
+        wsHandler.send(String(req.body.msg))
+        gpWsHistory = gpWsHistory + 'server send: \n' + req.body.msg + '\n'
+        res.json({'data': '', 'state': 0})
+      })
+      router.post('/closeWs', (req, res) => {
+        wsHandler.close()
+        gpWsHistory = gpWsHistory + 'server 主动关闭\n'
+        res.json({'data': '', 'state': 0})
       })
       // router.get('/detail', (req, res) => {
       //   try {

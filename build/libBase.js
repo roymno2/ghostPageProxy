@@ -42,7 +42,9 @@ function responseContentReplace (proxyInfo, requestDetail, responseDetail, tmpRe
                 method: proxyInfo["orgMethod"],
                 headers: webOutHeader
             }
-            tmpReqInfo['webRequestHeader'] = JSON.stringify(insideInfo.headers, null, 4)
+			if (tmpReqInfo !== null) {
+                tmpReqInfo['webRequestHeader'] = JSON.stringify(insideInfo.headers, null, 4)
+            }
             let tmpPayload = undefined
             if (insideInfo.method === 'POST') {
                 // if (tmpReqInfo !== null) {

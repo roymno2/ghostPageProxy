@@ -5,7 +5,6 @@ import * as routerNames from './routerNames'
 
 import Main from '../pages/main/Main'
 import NotFound from '../pages/notFound/NotFound'
-import ConfigPage from '../pages/config/Config'
 Vue.use(Router)
 
 function getFixedUrl (url) {
@@ -40,15 +39,6 @@ var allRoutes = {
       meta: {
         pageTitle: `router.${routerNames.MAIN}`,
         pageName: '代理记录'
-      }
-    },
-    {
-      path: '/config',
-      name: 'config',
-      component: ConfigPage,
-      meta: {
-        pageTitle: '配置页面',
-        pageName: '配置页面'
       }
     },
     {
