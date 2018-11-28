@@ -10,18 +10,18 @@
                 <el-button size="mini" @click="saveConfig()" type="primary">保存并应用</el-button>
               </el-badge>
             </el-form-item>
+            <el-form-item label="原始主机">
+              <el-input size="mini" v-model="config.orgHost" style="width:300px"></el-input>
+            </el-form-item>
+            <el-form-item label="转发主机">
+              <el-input size="mini" v-model="config.webHost" style="width:300px"></el-input>
+            </el-form-item>
             <el-form-item label="详细记录">
               <el-switch v-if="config"
                          v-model="config.debug"
                          active-color="#13ce66"
                          inactive-color="#ccc">
               </el-switch>
-            </el-form-item>
-            <el-form-item label="原始主机">
-              <el-input size="mini" v-model="config.orgHost" style="width:300px"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-input size="mini" v-model="config.webHost" style="width:300px"></el-input>
             </el-form-item>
             <el-form-item label="批量设置cookie">
               <textarea v-model="cookieVal" style="width:100%;min-height: 100px;"></textarea>
