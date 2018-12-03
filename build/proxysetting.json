@@ -1,30 +1,44 @@
 {
-    "orgHost": "127.0.0.1:8085",
-    "webHost": "192.168.1.113:9999",
-    "proxyList": [
+    "hostSetting": [
         {
-            "orgMethod": "GET",
-            "orgPath": "^/api/task/list",
-            "resStatus": "0",
-            "orgUseRe": true,
-            "webRewrite": {
-                "from": "^/api/task/list",
-                "to": "/task/list",
-                "useRe": true
-            },
-            "webHeader": {}
-        },
-        {
-            "orgMethod": "",
-            "orgPath": "^/api/task",
-            "resStatus": "0",
-            "orgUseRe": true,
-            "webRewrite": {
-                "from": "^/api/setheader",
-                "to": "/api/setheader",
-                "useRe": true
-            },
-            "webHeader": {}
+            "comment": "数据处理工具",
+            "orgHost": "127.0.0.1:8085",
+            "webHost": "192.168.1.147:10053",
+            "enableHost": true,
+            "debug": false,
+            "cookieVal": "",
+            "proxyList": [
+                {
+                    "orgMethod": "",
+                    "orgPath": "^/api/task",
+                    "resStatus": "0",
+                    "orgUseRe": true,
+                    "enable": false,
+                    "webRewrite": {
+                        "from": "",
+                        "to": "",
+                        "useRe": true
+                    },
+                    "useFake": true,
+                    "resContent": "roy",
+                    "webHeader": {}
+                },
+                {
+                    "orgMethod": "",
+                    "orgPath": "^/api/.*",
+                    "resStatus": "0",
+                    "orgUseRe": true,
+                    "enable": true,
+                    "webRewrite": {
+                        "from": "",
+                        "to": "",
+                        "useRe": true
+                    },
+                    "useFake": false,
+                    "resContent": "",
+                    "webHeader": {}
+                }
+            ]
         }
     ]
 }

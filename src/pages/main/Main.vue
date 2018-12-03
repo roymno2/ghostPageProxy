@@ -14,7 +14,7 @@
         <div class="flex-inner">
           <config v-show="activeName === 'first'"></config>
           <history v-show="activeName === 'second'"></history>
-          <div class="f-height-full f-col-list" v-if="activeName === 'third'">
+          <div class="f-height-full f-col-list" v-show="activeName === 'third'">
             <div class="f-grow-1 flex-outer">
               <div class="flex-inner">
                 <ws-client ></ws-client>

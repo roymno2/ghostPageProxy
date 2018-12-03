@@ -1,5 +1,6 @@
 'use strict'
 const bodyParser = require('body-parser')
+const fs = require('fs')
 const express = require('express')
 var gpWsHistory = ''
 var WebSocketServer = require('ws').Server
@@ -13,6 +14,7 @@ class webHubController {
   }
 
   initws () {
+    // websocket服务器
     try {
       wssMain.on('connection', function (ws) {
         wsHandler = ws
@@ -78,6 +80,24 @@ class webHubController {
         wsHandler.close()
         gpWsHistory = gpWsHistory + 'server 主动关闭\n'
         res.json({'data': '', 'state': 0})
+      })
+      router.get('/downloadConfig', (req, res) => {
+        // 第一种方式
+        // var f="F:/ftproot/NW.js.docx";
+        // var f="f:/ftproot/我是中文的语言.txt"
+        // //var f = req.params[0];
+        // f = path.resolve(f);
+        // console.log('Download file: %s', f);
+        // res.download(f);
+        // 第二种方式
+        let newName = req.query.name
+        var path="./build/proxysetting.json"
+        var f = fs.createReadStream(path)
+        res.writeHead(200, {
+          'Content-Type': 'application/force-download',
+          'Content-Disposition': 'attachment; filename=proxysetting_' + newName + '.json'
+        })
+        f.pipe(res)
       })
       // router.get('/detail', (req, res) => {
       //   try {

@@ -10,21 +10,18 @@ class appHubController {
     //构造函数
     constructor() {
         this.hubId = 0
-        this.showAny = true
         this.recordHistoryLimit = 1000;
         // 请求缓存池，最近500条
         this.recordHistoryList = [];
         this.proxySettingController = new confController()
         this.proxyConf = this.proxySettingController.loadConf()
-        this.proxyConfDebug = this.proxySettingController.loadConfDebug()
     }
     loadConf () {
       return this.proxySettingController.loadConfOrg()
     }
     saveConf (content) {
-      this.proxySettingController.saveConf(content)
+      this.proxySettingController.saveConfOrg(content)
       this.proxyConf = this.proxySettingController.loadConf()
-      this.proxyConfDebug = this.proxySettingController.loadConfDebug()
     }
     getHistory () {
       return this.recordHistoryList
@@ -74,6 +71,8 @@ class appHubController {
             "resStatus": hostProxyConfCell["proxyList"][idIndex]["resStatus"],
             "orgHost": orgHost,
             "orgPath": orgPath,
+            "debug": hostProxyConfCell["proxyList"][idIndex]["debug"],
+            "useFake": hostProxyConfCell["proxyList"][idIndex]["useFake"],
             "orgMethod": orgMethod
         }
     }
@@ -86,7 +85,7 @@ class appHubController {
         }
         // 记录匹配到的
         let tmpReqInfo = this.recordListAdd(requestDetail, proxyInfo["webHost"], proxyInfo["webPort"], proxyInfo["webPath"], proxyInfo["webHeader"])
-        if (this.proxyConfDebug === true) {
+        if (proxyInfo['debug'] === true) {
           return libBase.responseContentReplace(proxyInfo, requestDetail, responseDetail, tmpReqInfo)
         } else {
           return libBase.responseContentReplace(proxyInfo, requestDetail, responseDetail, null)

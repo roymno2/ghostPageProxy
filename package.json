@@ -5,7 +5,7 @@
   "author": "",
   "private": true,
   "scripts": {
-    "start": "node ./node_modules/anyproxy/bin/anyproxy --port 8084 --rule ./build/rule_default.js",
+    "dev": "node ./node_modules/anyproxy/bin/anyproxy --port 8084 --rule ./build/rule_default.js",
     "base": "node ./node_modules/anyproxy/bin/anyproxy --port 8084 --rule ./build/rule_base.js"
   },
   "dependencies": {

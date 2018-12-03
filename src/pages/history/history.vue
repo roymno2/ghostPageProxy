@@ -35,7 +35,7 @@
           </el-switch>
         </div>
         <div class="f-grow-1 f-padding-left-std" v-if="configInfo" style="text-align: right">
-          附加说明：系统只会记录原始主机为{{configInfo.orgHost}}的请求，记录更新时间 {{loadTime}}
+          附加说明：系统只会记录原始主机为{{configInfo.orgHost}}的请求（注意无法拦截流式文件返回），记录更新时间 {{loadTime}}
         </div>
       </div>
     </div>
@@ -49,7 +49,7 @@
               sortable
               label="序号">
             </el-table-column>
-            <el-table-column  v-if="hideHost"
+            <el-table-column  v-if="hideHost === false"
               fixed
               prop="time"
               width="140"
@@ -60,27 +60,27 @@
               label="主机"
               width="150">
             </el-table-column>
-            <el-table-column v-if="hideHost"
+            <el-table-column v-if="hideHost === false"
                              fixed
                              width="80"
                              sortable
                              prop="orgType"
                              label="分类">
             </el-table-column>
-            <el-table-column v-if="hideHost"
+            <el-table-column v-if="hideHost === false"
               fixed
               width="80"
               sortable
               prop="orgMethod"
               label="类型">
             </el-table-column>
-            <el-table-column v-if="hideHost"
+            <el-table-column v-if="hideHost === false"
               min-width="500"
               prop="orgPath"
               sortable
               label="地址">
             </el-table-column>
-            <el-table-column v-if="!hideHost"
+            <el-table-column v-if="!hideHost === false"
               min-width="500"
               prop="orgPathWithMethod"
               sortable
@@ -290,12 +290,13 @@ export default {
   },
   computed: {
     realList: function () {
+      // 过滤列表
+      // 过滤语句去掉前后空格
       let tmpRecordFilterStr = $.trim(this.recordFilterStr)
       if (this.proxyRecordData) {
+        // 如果有记录数据，进行过滤
         return this.proxyRecordData.filter(el => {
-          if ($.trim(this.recordFilterStr) !== '' && el.orgPath.indexOf(tmpRecordFilterStr) === -1) {
-            return false
-          } else if (this.onlyProxy === true && el.webHost === '[未转发]') {
+          if ((this.onlyProxy === true && el.webHost === '[未转发]') || ($.trim(this.recordFilterStr) !== '' && el.orgPath.indexOf(tmpRecordFilterStr) === -1)) {
             return false
           } else {
             return true

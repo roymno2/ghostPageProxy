@@ -7,6 +7,7 @@ function responseContentReplace (proxyInfo, requestDetail, responseDetail, tmpRe
     // 按照proxyInfo去发送请求
     const finResponseDetail = responseDetail.response
     if (tmpReqInfo !== null) {
+      // 负责记录
       tmpReqInfo['orgResponseHeader'] = JSON.stringify(finResponseDetail['header'], null, 4)
       tmpReqInfo['orgRequestHeader'] = JSON.stringify(requestDetail.requestOptions.headers, null, 4)
       if (tmpReqInfo['orgMethod'] !== 'GET' || tmpReqInfo['orgMethod'] !== 'get') {
@@ -26,7 +27,7 @@ function responseContentReplace (proxyInfo, requestDetail, responseDetail, tmpRe
     // 返回一个promise
     return new Promise((resolve, reject) => {
         // 如果没有设置返回内容
-        if (proxyInfo["resContent"] === null) {
+        if (proxyInfo["useFake"] !== true) {
             // try {
             let webOutHeader = null
             if (parseInt(proxyInfo["webPort"]) === 80) {
@@ -42,7 +43,7 @@ function responseContentReplace (proxyInfo, requestDetail, responseDetail, tmpRe
                 method: proxyInfo["orgMethod"],
                 headers: webOutHeader
             }
-			if (tmpReqInfo !== null) {
+			      if (tmpReqInfo !== null) {
                 tmpReqInfo['webRequestHeader'] = JSON.stringify(insideInfo.headers, null, 4)
             }
             let tmpPayload = undefined
