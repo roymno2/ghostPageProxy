@@ -28,7 +28,6 @@ function responseContentReplace (proxyInfo, requestDetail, responseDetail, tmpRe
     return new Promise((resolve, reject) => {
         // 如果没有设置返回内容
         if (proxyInfo["useFake"] !== true) {
-            // try {
             let webOutHeader = null
             if (parseInt(proxyInfo["webPort"]) === 80) {
                 webOutHeader = runRebuildHeaders(JSON.parse(JSON.stringify(requestDetail.requestOptions.headers)), proxyInfo["webHost"], proxyInfo["webHeader"])
@@ -47,7 +46,7 @@ function responseContentReplace (proxyInfo, requestDetail, responseDetail, tmpRe
                 tmpReqInfo['webRequestHeader'] = JSON.stringify(insideInfo.headers, null, 4)
             }
             let tmpPayload = undefined
-            if (insideInfo.method === 'POST') {
+            if (insideInfo.method !== 'GET') {
                 // if (tmpReqInfo !== null) {
                 //   if (String(requestDetail.requestData)) {
                 //     tmpReqInfo['payload'] = JSON.stringify(requestDetail.requestOptions.headers, null, 4)
@@ -55,8 +54,10 @@ function responseContentReplace (proxyInfo, requestDetail, responseDetail, tmpRe
                 // }
                 tmpPayload = requestDetail.requestData
             }
+            console.log('pkg resend finish')
             // 发送请求
             sendRequestOnce(insideInfo, tmpPayload, (statusCode, statusMessage, headers, data, error) => {
+                console.log('resend get data finish')
                 if (error === undefined) {
                 if (tmpReqInfo !== null) {
                     tmpReqInfo['webResponseStatusCode'] = String(statusCode)
@@ -169,6 +170,7 @@ function runRebuildHeaders (webHeader, webHost, header) {
 }
 
 function sendRequestOnce(options, postData, outCallback) {
+    console.log('postData', postData)
     // 发送一个请求
     let lenData = 0
     if (postData !== undefined && postData !== null) {
@@ -217,7 +219,7 @@ function sendRequestOnce(options, postData, outCallback) {
         console.error(err);
       outCallback(500, 'time out', {}, null, 'time out')
     });
-    if (options.method !== 'GET' && options.method !== 'DELETE') {
+    if (postData !== null && postData !== undefined && options.method !== 'GET') {
         // 如果是get，则跳过write这步
         req.write(postData);
     }

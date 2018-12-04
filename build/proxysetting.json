@@ -5,24 +5,34 @@
             "orgHost": "127.0.0.1:8085",
             "webHost": "192.168.1.147:10053",
             "enableHost": true,
-            "debug": false,
+            "debug": true,
             "cookieVal": "",
             "proxyList": [
                 {
                     "orgMethod": "",
-                    "orgPath": "^/api/task",
+                    "orgPath": "^/api/.*",
                     "resStatus": "0",
                     "orgUseRe": true,
-                    "enable": false,
+                    "enable": true,
                     "webRewrite": {
                         "from": "",
                         "to": "",
                         "useRe": true
                     },
-                    "useFake": true,
-                    "resContent": "roy",
+                    "useFake": false,
+                    "resContent": "",
                     "webHeader": {}
-                },
+                }
+            ]
+        },
+        {
+            "comment": "自运维",
+            "orgHost": "127.0.0.1:8080",
+            "webHost": "192.168.1.147:10066",
+            "enableHost": true,
+            "debug": false,
+            "cookieVal": "",
+            "proxyList": [
                 {
                     "orgMethod": "",
                     "orgPath": "^/api/.*",

@@ -35,7 +35,7 @@
           </el-switch>
         </div>
         <div class="f-grow-1 f-padding-left-std" v-if="configInfo" style="text-align: right">
-          附加说明：系统只会记录原始主机为{{configInfo.orgHost}}的请求（注意无法拦截流式文件返回），记录更新时间 {{loadTime}}
+          附加说明：无法拦截流式文件返回，记录更新时间 {{loadTime}}
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@
               <template slot-scope="props">
                 <el-form label-position="left">
                   <el-form-item label="是否收集到响应结果" v-show="props.row.webHost !== '[未转发]'">
-                    <span  v-show="props.row.webResponseError ===''" style="color: red">{{configInfo.debug === true ? '还没有': '未启用详细记录'}}</span>
+                    <span  v-show="props.row.webResponseError ===''" style="color: red">{{props.row.debug === true ? '还没有': '未启用详细记录'}}</span>
                     <span v-show="props.row.webResponseError !==''" style="color: blue">已收集完成</span>
                   </el-form-item>
                   <el-form-item label="转发错误" v-show="props.row.webHost !== '[未转发]'">

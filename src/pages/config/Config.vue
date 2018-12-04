@@ -17,7 +17,7 @@
       <el-tabs v-model="editableTabsValue" type="card" editable @edit="handleTabsEdit" style="height: 100%">
         <el-tab-pane
           v-for="(item, hostId) in config.hostSetting"
-          :label="(item.orgHost === '' && item.comment === '') ? '未命名' : item.orgHost + ' ' + item.comment"
+          :label="(item.enableHost === true ? '【已启用】 ' : '') + ((item.orgHost === '' && item.comment === '') ? '未命名' : item.orgHost + ' ' + item.comment)"
           :key="hostId"
           :name="hostId + ''"
         >
@@ -25,17 +25,16 @@
       </el-tabs>
     </div>
     <div class="f-grow-1 flex-outer" v-if="config">
-      <div class="flex-inner" style="overflow: auto" v-for="(item, hostId) in config.hostSetting" :key="hostId">
-        <div class="" v-show="hostId === Number(editableTabsValue)">
+      <div class="flex-inner" style="overflow: auto" v-for="(item, hostId) in config.hostSetting" :key="hostId" v-show="hostId === Number(editableTabsValue)">
+        <div class="">
+
           <el-form size="mini" label-width="150px">
-            <el-form-item label="描述">
-              <el-input size="mini" v-model="item.comment" style="width:300px"></el-input>
-            </el-form-item>
-            <el-form-item label="原始主机">
-              <el-input size="mini" v-model="item.orgHost" style="width:300px"></el-input>
-            </el-form-item>
-            <el-form-item label="转发主机">
-              <el-input size="mini" v-model="item.webHost" style="width:300px"></el-input>
+            <el-form-item label="">
+              <el-alert v-show="item.enableHost === false" style="width:80%;" :closable="false"
+                        title="已停用"
+                        center
+                        type="error">
+              </el-alert>
             </el-form-item>
             <el-form-item label="启动配置">
               <el-switch v-if="item"
@@ -44,9 +43,18 @@
                          inactive-color="#ccc">
               </el-switch>
             </el-form-item>
+            <el-form-item label="原始主机">
+              <el-input size="mini" v-model="item.orgHost" style="width:300px"></el-input>
+            </el-form-item>
+            <el-form-item label="转发主机">
+              <el-input size="mini" v-model="item.webHost" style="width:300px"></el-input>
+            </el-form-item>
+            <el-form-item label="描述">
+              <el-input size="mini" v-model="item.comment" style="width:300px"></el-input>
+            </el-form-item>
             <el-form-item label="详细记录">
               <el-switch v-if="item"
-                       v-model="item.debug"
+                       v-model="item.debug" active-text=" (非调试请勿开启)"
                        active-color="#13ce66"
                        inactive-color="#ccc">
               </el-switch>
@@ -55,7 +63,10 @@
               <div class="f-row-list">
                 <textarea v-model="item.cookieVal" style="width:90%;height: 100px;"></textarea>
                 <div class="f-grow-0">
-                  <el-button size="mini" @click="allCookieDel(hostId)">删除全部规则的cookie</el-button> <el-button @click="allCookieSet(hostId)" size="mini" type="primary">设置全部规则的cookie</el-button>
+                  <el-button-group>
+                    <el-button @click="allCookieDel(hostId)" size="mini" type="danger">删除全部规则的cookie</el-button>
+                    <el-button @click="allCookieSet(hostId)" size="mini" type="primary">设置全部规则的cookie</el-button>
+                  </el-button-group>
                 </div>
               </div>
             </el-form-item>
@@ -153,9 +164,17 @@
           <el-input v-model="editContent.webRewrite.to" placeholder="可选，请填写替换内容"></el-input>
         </el-form-item>
         <el-form-item label="webHeader定义">
-          <el-button type="primary" @click="addCookie">添加cookie</el-button>
-          <el-input v-if="editContent.webHeader && editContent.webHeader.cookie !== undefined" v-model="editContent.webHeader.cookie" placeholder="cookie"></el-input>
-          <el-button v-if="editContent.webHeader && editContent.webHeader.cookie !== undefined" type="danger" @click="delCookie">删除cookie</el-button>
+          <el-button type="primary" @click="addCookie" v-if="editContent.webHeader === undefined || editContent.webHeader.cookie === undefined">设置cookie</el-button>
+          <template v-if="editContent.webHeader !== undefined && editContent.webHeader.cookie !== undefined">
+            <div class="f-col-list">
+              <div class="f-grow-1">
+                <el-input v-model="editContent.webHeader.cookie" placeholder="cookie"></el-input>
+              </div>
+              <div class="f-grow-0">
+                <el-button type="danger" icon="el-icon-delete" @click="delCookie" title="删除cookie"></el-button>
+              </div>
+            </div>
+          </template>
         </el-form-item>
         <el-form-item label="启用此条">
           <el-switch v-model="editContent.enable"
@@ -260,7 +279,7 @@ export default {
       console.log(indexData)
       if (indexData < this.config.hostSetting[Number(hostId)].proxyList.length - 1) {
         let tmpData = this.config.hostSetting[Number(hostId)].proxyList.splice(indexData, 1)
-        this.config.hostSetting[Number(hostId)].proxyList.splice(indexData + 1 , 0, tmpData[0])
+        this.config.hostSetting[Number(hostId)].proxyList.splice(indexData + 1, 0, tmpData[0])
       } else {
         this.$message('已经到列表尾部')
       }
@@ -311,22 +330,24 @@ export default {
     },
     allCookieSet (hostId) {
       if (this.config) {
-        for (let i = 0; i < this.config.hostSetting[Number(hostId)].proxyList.length; i++) {
-          if (this.config.hostSetting[Number(hostId)].proxyList[i].hasOwnProperty('webHeader') === false) {
+        let tmpMidList = this.config.hostSetting[Number(hostId)].proxyList
+        for (let i = 0; i < tmpMidList.length; i++) {
+          if (tmpMidList[i].hasOwnProperty('webHeader') === false) {
             this.$set(this.config.hostSetting[Number(hostId)].proxyList[i], 'webHeader', {})
           }
-          if (this.config.hostSetting[Number(hostId)].proxyList[i].webHeader === undefined || this.config.hostSetting[Number(hostId)].proxyList[i].webHeader === null) {
-            this.config.hostSetting[Number(hostId)].proxyList[i].webHeader = {}
+          if (tmpMidList[i].webHeader === undefined || tmpMidList[i].webHeader === null) {
+            tmpMidList[i].webHeader = {}
           }
-          this.$set(this.config.hostSetting[Number(hostId)].proxyList[i].webHeader, 'cookie', this.cookieVal)
+          this.$set(this.config.hostSetting[Number(hostId)].proxyList[i].webHeader, 'cookie', this.config.hostSetting[Number(hostId)].cookieVal)
         }
       }
     },
     allCookieDel (hostId) {
       if (this.config) {
-        for (let i = 0; i < this.config.hostSetting[Number(hostId)].proxyList.length; i++) {
-          if (this.config.hostSetting[Number(hostId)].proxyList[i].webHeader !== undefined && this.config.hostSetting[Number(hostId)].proxyList[i].webHeader !== null) {
-            if (this.config.hostSetting[Number(hostId)].proxyList[i].webHeader.hasOwnProperty('cookie')) {
+        let tmpMidList = this.config.hostSetting[Number(hostId)].proxyList
+        for (let i = 0; i < tmpMidList.length; i++) {
+          if (tmpMidList[i].webHeader !== undefined && tmpMidList[i].webHeader !== null) {
+            if (tmpMidList[i].webHeader.hasOwnProperty('cookie')) {
               this.$delete(this.config.hostSetting[Number(hostId)].proxyList[i].webHeader, 'cookie')
             }
           }
@@ -340,7 +361,7 @@ export default {
       if (this.editContent.webHeader === undefined || this.editContent.webHeader === null) {
         this.editContent.webHeader = {}
       }
-      this.editContent.webHeader['cookie'] = ''
+      this.$set(this.editContent.webHeader, 'cookie', '')
     },
     delCookie () {
       this.$delete(this.editContent.webHeader, 'cookie')
@@ -367,14 +388,16 @@ export default {
       var self = this
       let outName = {}
       for (let i = 0; i < self.config.hostSetting.length; i++) {
-        if (outName.hasOwnProperty(self.config.hostSetting[i].orgHost) === false) {
-          outName[self.config.hostSetting[i].orgHost] = true
-        } else {
-          this.$message({
-            type: 'error',
-            message: '原始主机' + self.config.hostSetting[i].orgHost + '存在多份配置，拒绝保存'
-          })
-          return false
+        if (self.config.hostSetting[i].enableHost === true) {
+          if (outName.hasOwnProperty(self.config.hostSetting[i].orgHost) === false) {
+            outName[self.config.hostSetting[i].orgHost] = true
+          } else {
+            this.$message({
+              type: 'error',
+              message: '原始主机' + self.config.hostSetting[i].orgHost + '存在多份【已启用】的配置，拒绝保存'
+            })
+            return false
+          }
         }
       }
       self.$service.post(self, 'saveConfig', self.config).then((data) => {

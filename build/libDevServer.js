@@ -71,7 +71,7 @@ class appHubController {
             "resStatus": hostProxyConfCell["proxyList"][idIndex]["resStatus"],
             "orgHost": orgHost,
             "orgPath": orgPath,
-            "debug": hostProxyConfCell["proxyList"][idIndex]["debug"],
+            "debug": hostProxyConfCell["debug"],
             "useFake": hostProxyConfCell["proxyList"][idIndex]["useFake"],
             "orgMethod": orgMethod
         }
@@ -84,7 +84,8 @@ class appHubController {
             console.log("  send >> " + proxyInfo["orgMethod"] + " " + proxyInfo["orgHost"] + proxyInfo["orgPath"] + " ->> " + proxyInfo["webHost"] + ':' + proxyInfo["webPort"] + proxyInfo["webPath"])
         }
         // 记录匹配到的
-        let tmpReqInfo = this.recordListAdd(requestDetail, proxyInfo["webHost"], proxyInfo["webPort"], proxyInfo["webPath"], proxyInfo["webHeader"])
+        let tmpReqInfo = this.recordListAdd(requestDetail, proxyInfo["webHost"], proxyInfo["webPort"], proxyInfo["webPath"], proxyInfo["webHeader"], proxyInfo["debug"])
+      console.log(proxyInfo['debug'])
         if (proxyInfo['debug'] === true) {
           return libBase.responseContentReplace(proxyInfo, requestDetail, responseDetail, tmpReqInfo)
         } else {
@@ -109,12 +110,13 @@ class appHubController {
       }
     }
 
-    recordListAdd (requestDetail, webHost, webPort, webPath, webHeader) {
+    recordListAdd (requestDetail, webHost, webPort, webPath, webHeader, isDebug) {
       if (this.checkHostInConfig(requestDetail) === true) {
         let nowTime = new Date()
         this.hubId = this.hubId + 1
         let tmpReqInfo = {
           id: String(this.hubId),
+          debug: isDebug,
           time: this.recordGetTime(nowTime),
           orgHost: requestDetail.requestOptions.hostname + ':' + requestDetail.requestOptions.port,
           orgMethod: requestDetail.requestOptions.method,
