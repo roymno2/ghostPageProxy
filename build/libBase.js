@@ -54,10 +54,10 @@ function responseContentReplace (proxyInfo, requestDetail, responseDetail, tmpRe
                 // }
                 tmpPayload = requestDetail.requestData
             }
-            console.log('pkg resend finish')
+            // console.log('pkg resend finish')
             // 发送请求
             sendRequestOnce(insideInfo, tmpPayload, (statusCode, statusMessage, headers, data, error) => {
-                console.log('resend get data finish')
+                // console.log('resend get data finish')
                 if (error === undefined) {
                 if (tmpReqInfo !== null) {
                     tmpReqInfo['webResponseStatusCode'] = String(statusCode)
@@ -170,7 +170,6 @@ function runRebuildHeaders (webHeader, webHost, header) {
 }
 
 function sendRequestOnce(options, postData, outCallback) {
-    console.log('postData', postData)
     // 发送一个请求
     let lenData = 0
     if (postData !== undefined && postData !== null) {

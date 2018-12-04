@@ -267,7 +267,6 @@ export default {
   },
   methods: {
     moveItemUp (hostId, indexData) {
-      console.log(indexData)
       if (indexData > 0) {
         let tmpData = this.config.hostSetting[Number(hostId)].proxyList.splice(indexData, 1)
         this.config.hostSetting[Number(hostId)].proxyList.splice(indexData - 1, 0, tmpData[0])
@@ -276,7 +275,6 @@ export default {
       }
     },
     moveItemDown (hostId, indexData) {
-      console.log(indexData)
       if (indexData < this.config.hostSetting[Number(hostId)].proxyList.length - 1) {
         let tmpData = this.config.hostSetting[Number(hostId)].proxyList.splice(indexData, 1)
         this.config.hostSetting[Number(hostId)].proxyList.splice(indexData + 1, 0, tmpData[0])
@@ -375,7 +373,6 @@ export default {
             type: 'success',
             message: '加载完成'
           })
-          console.log(self.config)
         } catch (e) {
           self.$message({
             message: '加载失败',

@@ -7,6 +7,7 @@
             <el-tab-pane label="代理配置" name="first"></el-tab-pane>
             <el-tab-pane label="代理历史" name="second"></el-tab-pane>
             <el-tab-pane label="websocket测试" name="third"></el-tab-pane>
+            <el-tab-pane label="json比较" name="four"></el-tab-pane>
           </el-tabs>
         </div>
       </div>
@@ -28,6 +29,9 @@
               </div>
             </div>
           </div>
+          <div class="f-height-full" style="padding:15px;box-sizing: border-box" v-show="activeName === 'four'">
+            <json-compare></json-compare>
+          </div>
         </div>
       </div>
     </div>
@@ -39,13 +43,15 @@ import history from '../history/history'
 import config from '../config/config'
 import wsClient from '../wsClient/wsClient'
 import wsServer from '../wsServer/wsServer'
+import jsonCompare from '../../components/jsonCompare/jsonCompare'
 export default {
   name: 'Main',
   components: {
     'history': history,
     'config': config,
     'ws-client': wsClient,
-    'ws-server': wsServer
+    'ws-server': wsServer,
+    'json-compare': jsonCompare
   },
   data () {
     return {

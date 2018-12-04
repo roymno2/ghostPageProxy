@@ -30,8 +30,14 @@ class confController {
           if (proxyDataOrg['hostSetting'][i]['enableHost'] === true) {
             let outBuildHostSetting = this.loadConfigCellMain(proxyDataOrg['hostSetting'][i])
             proxyData[outBuildHostSetting['orgHost']] = outBuildHostSetting
+            if (outBuildHostSetting['orgHost'].substr(0,9) === 'localhost') {
+              // 自动加上 127.0.0.1 + 端口
+              proxyData['127.0.0.1' + outBuildHostSetting['orgHost'].substr(9)] = outBuildHostSetting
+            } else if (outBuildHostSetting['orgHost'].substr(0,9) === '127.0.0.1') {
+              proxyData['localhost' + outBuildHostSetting['orgHost'].substr(9)] = outBuildHostSetting
+            }
           } else {
-            console.log(proxyDataOrg['hostSetting'][i]['orgHost'], proxyDataOrg['hostSetting'][i]['enableHost'])
+            // console.log(proxyDataOrg['hostSetting'][i]['orgHost'], proxyDataOrg['hostSetting'][i]['enableHost'])
           }
         }
         return proxyData

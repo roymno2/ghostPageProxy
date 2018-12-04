@@ -85,7 +85,6 @@ class appHubController {
         }
         // 记录匹配到的
         let tmpReqInfo = this.recordListAdd(requestDetail, proxyInfo["webHost"], proxyInfo["webPort"], proxyInfo["webPath"], proxyInfo["webHeader"], proxyInfo["debug"])
-      console.log(proxyInfo['debug'])
         if (proxyInfo['debug'] === true) {
           return libBase.responseContentReplace(proxyInfo, requestDetail, responseDetail, tmpReqInfo)
         } else {
